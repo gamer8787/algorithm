@@ -1,39 +1,30 @@
-from collections import defaultdict
-from itertools import permutations, combinations
-
+from itertools import combinations,permutations
 def solution(user_id, banned_id):
-    dic = defaultdict(set)
-    for index,ban in enumerate(banned_id):
-        for user in user_id:
-            if check(user,ban):
-                dic[index].add(user)
-    # init = set()
-    init = []
-    avail = set()
-    def dfs(n,init):
-        global ret
-        if n == len(banned_id):
-            avail.add(frozenset(init))
-            return
-        else:
-            user_list = dic[n]
-            for user in user_list:
-                if user not in init:
-                    init.add(user)
-                    dfs(n+1,init)
-                    init.remove(user)
-    dfs(0,set())
-    return len(avail)
+    per = permutations(banned_id)
+    comb = combinations(user_id,len(banned_id))
+    ret = 0
+    for c in comb:
+        for p in permutations(banned_id):
+            # print(p)
+            if same_all(c,p):
+                ret+=1     
+                break
+    print(ret)
+    return ret
 
-def check(user,ban):
-    if len(user)!= len(ban):
+def same(a,b):
+    if len(a)!=len(b):
         return False
     else:
-        for u,b in zip(user,ban):
-            if b=="*":
+        for i,j in zip(a,b):
+            if j=="*":
                 continue
-            elif u!=b:
+            if i!=j:
                 return False
     return True
 
-solution(["frodo", "fradi", "crodo", "abc123", "frodoc"],["fr*d*", "abc1**"])
+def same_all(users,bans):
+    for u,b in zip(users,bans):
+        if not same(u,b):
+            return False
+    return True
