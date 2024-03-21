@@ -1,43 +1,42 @@
-n = int(input())
-numbers = list(map(int,input().split()))
-op = list(map(int,input().split()))
-#+-x//
-INF = 10**9
-m = INF
-M = -INF
-def dfs(op,numbers):
-    global m,M
-    if len(numbers) ==1:
-        m = min(m,numbers[0])
-        M = max(M, numbers[0])
-    else:
-        if op[0]>0:
-            a = numbers[0] + numbers[1]
-            new = [a, *numbers[2:]]
-            new_op = op[:]
-            new_op[0]-=1
-            dfs(new_op,new)
-        if op[1]>0:
-            a = numbers[0] - numbers[1]
-            new = [a, *numbers[2:]]
-            new_op = op[:]
-            new_op[1]-=1
-            dfs(new_op,new)
-        if op[2]>0:
-            a = numbers[0] * numbers[1]
-            new = [a, *numbers[2:]]
-            new_op = op[:]
-            new_op[2]-=1
-            dfs(new_op,new)
-        if op[3]>0:
-            if numbers[0] > 0:
-                a = numbers[0] // numbers[1]
-            else:
-                a= -((-numbers[0]) // numbers[1])
-            new = [a, *numbers[2:]]
-            new_op = op[:]
-            new_op[3]-=1
-            dfs(new_op,new)
-dfs(op,numbers)
-print(M)
-print(m)
+import sys
+
+N = int(input())
+numbers = list(map(int,sys.stdin.readline().rstrip().split()))
+operators = list(map(int,sys.stdin.readline().rstrip().split()))
+
+MAX = -10**9
+MIN = -MAX
+
+value = numbers[0]
+def dfs(n):
+    global value, MAX, MIN
+    if n == N:
+        if value > MAX:
+            MAX = value
+        if value < MIN:
+            MIN = value
+    for i in range(4):
+        if operators[i] > 0:
+            temp = value
+            operators[i] -= 1
+            operation(i,n)
+            dfs(n+1)
+            operators[i] += 1
+            value = temp
+
+def operation(i,n):
+    global value
+    if i == 0:
+        value += numbers[n]
+    elif i == 1:
+        value -= numbers[n]
+    elif i == 2:
+        value *= numbers[n]
+    elif i == 3:
+        if value > 0 :
+            value = value // numbers[n]
+        else :
+            value = -((-value) // numbers[n])
+dfs(1)
+print(MAX)
+print(MIN)
