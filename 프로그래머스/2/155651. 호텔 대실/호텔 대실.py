@@ -3,8 +3,8 @@ def solution(book_time):
     for a,b in book_time:
         a = change(a)
         b = change(b)
-        dp[max(a-5,0)]+=1
-        dp[min(b+5,24*60-1)]-=1
+        dp[a]+=1
+        dp[min(b+10,24*60-1)]-=1
     for i in range(1,24*60):
         dp[i] = dp[i-1] + dp[i]
 
